@@ -1,3 +1,4 @@
+//importing all the packages needed
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -5,39 +6,38 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 
-//create a frame and name it jframe
+// here we declare all the public classes to be used in the project
 public class gui extends JFrame {
-
+// to rest the program
     public boolean resetter = false;
-
+//for timer
     Date startDate = new Date();
     Date endDate;
-
+//the message
     String vicMes = "not yet";
 
     int spacing = 5;
-
     int neighs = 0;
-
+//the x and y axis for the block spacing
     public int mx = -100;
     public int my = -100;
-
+//boolean value for the flag
     public boolean flagger = false;
-
+//emoji allignment
     public int circleX = 350;
     public int circleY = 5;
-
+//boolean value for the emoji
     public boolean happy = true;
-
+//spacing for eyes and mouth for emoji
     public int circleCenterX = circleX + 35;
     public int circleCenterY = circleY + 35;
-
+//flag allignment
     public int flaggerX = 300;
     public int flaggerY = 5;
-
+//bock space allignment
     public int spacingX = 80;
     public int spacingY = 5;
-
+//axis for the sign + and -
     public int plusX = 150;
     public int plusY = 4;
 
@@ -46,15 +46,15 @@ public class gui extends JFrame {
 
     public int flaggerCenterX = flaggerX + 35;
     public int flaggerCenterY = flaggerY + 35;
-
+//timer label
     public int timeX = 700;
     public int timeY = 5;
-
+//victory message
     public int vicMesX = 500;
     public int vicMesY = 150;
 
     public int sec = 0;
-
+//boolean values for the victory and defeat message
     public boolean victory = false;
 
     public boolean defeat = false;
@@ -62,6 +62,7 @@ public class gui extends JFrame {
     //inputing the random so it works on the basis of random
     Random rand = new Random();
 
+    //designing the window
     int[][] mines = new int [16][9];
     int[][] nears = new int[16][9];
     boolean[][] reveal = new boolean[16][9];
@@ -73,6 +74,7 @@ public class gui extends JFrame {
         this.setVisible(true);
         this.setResizable(false);
 
+        //the cubes are placed here
         for (int i = 0; i< 16; i++){
             for(int j = 0; j< 9; j++) {
                 if (rand.nextInt(100)<20){
@@ -83,6 +85,8 @@ public class gui extends JFrame {
                 reveal[i][j] = false;
             }
         }
+
+        //the near by mines will be shown
         for (int i = 0; i< 16; i++) {
             for (int j = 0; j < 9; j++) {
                 neighs = 0;
@@ -97,6 +101,8 @@ public class gui extends JFrame {
                 nears[i][j] = neighs;
             }
         }
+
+        //declaring the new board, move, click
         Board board = new Board();
         this.setContentPane(board);
 
@@ -118,6 +124,7 @@ public class gui extends JFrame {
 
     }
 
+    // the status which shows wheather we win or lose
     public void checkVictoryStatus() {
         if (defeat == false){
             for(int i = 0; i<16; i++){
@@ -137,6 +144,7 @@ public class gui extends JFrame {
         }
     }
 
+    // declaring the total mines
     private int totalmines() {
         int total = 0;
         for (int i = 0; i< 16; i++){
@@ -149,6 +157,7 @@ public class gui extends JFrame {
         return total;
     }
 
+    // number of boxes revealaed
     private int totalboxrevealed() {int total = 0;
         for(int i = 0; i<16; i++){
             for(int j = 0; j<9; j++){
@@ -160,6 +169,8 @@ public class gui extends JFrame {
         return total;
 
     }
+
+    // designing the colour of the window
     public class Board extends JPanel{
         public void paintComponent(Graphics g){
             g.setColor(Color.DARK_GRAY);
@@ -174,10 +185,13 @@ public class gui extends JFrame {
                         }
                     }
 
+                    // showing the space
                     if (mx >= spacing+i*50 && mx < spacing+i*50+50-2*spacing && my>= spacing+j*50+50+26 && my < spacing+j*50+10+50+50-2*spacing){
                         g.setColor(Color.lightGray);
                     }
                     g.fillRect(spacing+i*50, spacing+j*50+50, 50-1*spacing, 50-1*spacing);
+
+                    //coding the numbers in colours
                     if (reveal[i][j] == true){
                         g.setColor(Color.black);
                         if (mines[i][j] == 0 && nears[i][j] != 0) {
@@ -207,6 +221,7 @@ public class gui extends JFrame {
                             g.fillOval(i*50+3+10, j*50+47+15, 30,30);
                         }
                     }
+
                     // flag painting
                     if (flag[i][j]==true){
                         g.setColor(Color.BLACK);
@@ -229,7 +244,7 @@ public class gui extends JFrame {
             g.fillRect(plusX+5,plusY+5, 40,40);
 
             g.setFont(new Font ("tahoma", Font.PLAIN, 15));
-            g.drawString("Score board", spacingX-70, spacingY+30);
+            g.drawString("Block size", spacingX-70, spacingY+30);
 
             g.setColor(Color.BLACK);
 
@@ -296,7 +311,7 @@ public class gui extends JFrame {
                 vicMes = "WON";
             } else if (defeat == true) {
                 g.setColor(Color.red);
-                vicMes = "LOSE";
+                vicMes = "Lose";
             }
             if (victory == true || defeat == true){
                 vicMesY = 150+(int) (new Date().getTime() - endDate.getTime()) / 10;
@@ -316,10 +331,8 @@ public class gui extends JFrame {
         }
         @Override
         public void mouseMoved(MouseEvent e){
-            //System.out.println("THE MOUSE MOVED");
             mx = e.getX();
             my = e.getY();
-            //System.out.println("X: " + mx + ", Y: " + my +"");
         }
     }
     public abstract class Click implements MouseListener{
@@ -329,6 +342,7 @@ public class gui extends JFrame {
             mx = e.getX();
             my = e.getY();
 
+            // the space moves in and out
             if(mx >= minusX+20 && mx < minusX+60 && my >= minusY+20 && my <  minusY+60){
                 spacing--;
                 if(spacing < 1){
@@ -382,7 +396,7 @@ public class gui extends JFrame {
 
         }
 
-
+        //resets the entire program
         public void resetAll(){
             resetter = true;
             flagger = false;
@@ -420,6 +434,7 @@ public class gui extends JFrame {
             }
             resetter = false;
         }
+
         public boolean inCircle(){
             int dif = (int) Math.sqrt(Math.abs(mx-circleCenterX)*Math.abs(mx-circleCenterX)+Math.abs(my-circleCenterY)*Math.abs(my-circleCenterY));
             if (dif<35){
@@ -427,6 +442,7 @@ public class gui extends JFrame {
             }
             return false;
         }
+
         public boolean inFlagger(){
             int dif = (int) Math.sqrt(Math.abs(mx-flaggerCenterX)*Math.abs(mx-flaggerCenterX)+Math.abs(my-flaggerCenterY)*Math.abs(my-flaggerCenterY));
             if (dif<35){
